@@ -276,4 +276,26 @@ Host ${hostname}
 '@
 ```
 
+OK... enought writing code. Lets rollout
+
+Initilize terraform 
+
+```
+terraform init
+```
+
+Formate your using 
+
+```
+terraform fmt
+```
+
+at last lets plan and apply
+
+```
+terraform plan
+
+terraform apply
+```
+
 This whole terraform code can be found at my [GitHub repo](https://github.com/JAG-010/terraform-practice-project)
