@@ -49,7 +49,7 @@ Before we start writing code to create VPC, we need to inform terraform about th
 > Terraform relies on plugins called "providers" to interact with cloud providers, SaaS providers, and other APIs.
 > Terraform configurations must declare which providers they require so that Terraform can install and use them. In the following code we have used AWS as provider. 
 
-```json
+```
 terraform {
   required_providers {
     aws = {
@@ -70,7 +70,7 @@ provider "aws" {
 
 Now lets create the VPC. Create a file `main.tf` and the following resource block.
 
-```JSON
+```
 // Create VPC
 resource "aws_vpc" "lab_vpc" {
   cidr_block           = "10.123.0.0/16"
@@ -85,7 +85,7 @@ resource "aws_vpc" "lab_vpc" {
 
 Public Subnets are small pockets in each availability zone that can be accessed via the internet directly, Add this subnet block on the `main.tf`
 
-```JSON
+```
 resource "aws_subnet" "lab_public_subnet" {
   vpc_id                  = aws_vpc.lab_vpc.id
   cidr_block              = "10.123.1.0/24"
@@ -112,7 +112,7 @@ resource "aws_internet_gateway" "lab_igw" {
 
 Now create a route table and associate the subnet to IGW 
 
-```JSON
+```
 resource "aws_route_table" "lab_public_route_table" {
   vpc_id = aws_vpc.lab_vpc.id
 
@@ -135,7 +135,7 @@ resource "aws_route_table_association" "lab_public_assoc" {
 
 create a security group to allow access to our EC2 instance.
 
-```JSON
+```
 resource "aws_security_group" "lab_sg" {
   name        = "dev-sg"
   description = "dev security group"
@@ -163,7 +163,7 @@ We have written terraform to create VPC, now lets work on creating a EC2 instanc
 
 Considering our AWS account is new so we will create a new key-pair. If need more information on creating a key-pair on your Windows [Click Here](https://phoenixnap.com/kb/generate-ssh-key-windows-10)
 
-```JSON
+```
 resource "aws_key_pair" "lab_auth" {
   key_name   = "labkey"
   public_key = file("~/.ssh/labkey.pub")
@@ -180,7 +180,7 @@ since we alway want to use the latest AMI, we will create a data block to pull t
 
 > **Data sources** allow Terraform to use information defined outside of Terraform, defined by another separate Terraform configuration, or modified by functions.
 
-```JSON
+```
 data "aws_ami" "server_ami" {
   most_recent = true
   owners      = ["099720109477"] // ubuntu
@@ -214,7 +214,7 @@ sudo usermod -aG docker ubuntu
 
 finally lets create the EC2 instance. withing the `main.tf` add the ec2 resource block.
 
-```JSON
+```
 // Create EC2 instance
 resource "aws_instance" "lab_node" {
   instance_type          = "t2.micro"
@@ -251,14 +251,14 @@ resource "aws_instance" "lab_node" {
 
 Once the EC2 instance is created we need to know the public IP to connect. So we will create a output block on `output.tf` file to print the public IP of EC2.
 
-```JSON
+```
 output "dev_public_ip" {
   value = aws_instance.lab_node.public_ip
 }
 ```
 
 Also create a `variable.tf` file if using the VSCode config file. (These are completely optional)
-```json
+```
 variable "host_os" {
   type    = string
   default = "windows"
@@ -266,7 +266,7 @@ variable "host_os" {
 ```
 and `windows-ssh-config.tpl` for vscode configure
 
-```ps
+```
 add-content -path '~\.ssh\config' -value @'
 
 Host ${hostname}
