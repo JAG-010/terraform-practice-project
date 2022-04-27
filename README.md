@@ -276,15 +276,15 @@ Host ${hostname}
 '@
 ```
 
-OK... enought writing code. Lets rollout
+OK... enough writing code. Lets rollout
 
-Initilize terraform 
+Initialize terraform 
 
 ```
 terraform init
 ```
 
-Formate your using 
+Format your using 
 
 ```
 terraform fmt
